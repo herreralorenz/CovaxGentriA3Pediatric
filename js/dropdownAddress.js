@@ -11,11 +11,12 @@ $(document).ready(function(){
         var html_code = '';
         $.getJSON('https://raw.githubusercontent.com/flores-jacob/philippine-regions-provinces-cities-municipalities-barangays/master/philippine_provinces_cities_municipalities_and_barangays_2019v2.json', function(data){
        
-         html_code += '<option value="">Select '+id+'</option>';
-         
+             
          $.each(data, function(key, value){
+             if(value.region_name == "REGION IV-A"){
            html_code += '<option value="'+value.region_name+'">'+value.region_name+'</option>';      
-          
+           load_json_data_province('province', value.region_name);
+           }
          });
          $('#'+id).html(html_code);
         });
@@ -28,14 +29,17 @@ $(document).ready(function(){
      region_selected = parent_id;
      $.getJSON('https://raw.githubusercontent.com/flores-jacob/philippine-regions-provinces-cities-municipalities-barangays/master/philippine_provinces_cities_municipalities_and_barangays_2019v2.json', function(data){
     
-      html_code += '<option value="">Select '+id+'</option>';
         
       $.each(data, function(key, value){
         
        if(parent_id == value.region_name){
         $.each(value.province_list, function(key, value){
             //province is loaded when selecting a region
-         html_code += '<option value="'+key+'">'+key+'</option>';
+            if(key == "CAVITE"){
+                html_code += '<option value="'+key+'">'+key+'</option>';
+                load_json_data_city('city', key);
+            }
+
         
 
         });
@@ -54,7 +58,6 @@ $(document).ready(function(){
      province_selected=parent_id;
      $.getJSON('https://raw.githubusercontent.com/flores-jacob/philippine-regions-provinces-cities-municipalities-barangays/master/philippine_provinces_cities_municipalities_and_barangays_2019v2.json', function(data){
     
-      html_code += '<option value="">Select '+id+'</option>';
         
       $.each(data, function(key, value){
         
@@ -65,7 +68,11 @@ $(document).ready(function(){
             if(key == province_selected){
                 $.each(value.municipality_list, function(key, value){
                     //city is loaded when selected a municipality
-                    html_code += '<option value="'+key+'">'+key+'</option>';
+                    if(key == "GENERAL TRIAS CITY"){
+                        html_code += '<option value="'+key+'">'+key+'</option>';
+                        load_json_data_barangay('barangay', key);
+                    }
+                    
                 });
             }
         });
@@ -112,50 +119,12 @@ $(document).ready(function(){
 
 
    
+
+
+
+
     
-    $(document).on('change', '#region', function(){
-     var region = $(this).val();
-     if(region != '')
-     {
-      load_json_data_province('province', region);
-     }
-     else
-     {
-      $('#province').html('<option value="">Select state</option>');
-      $('#city').html('<option value="">Select city</option>');
-      $('#barangay').html('<option value="">Select house</option>');
-     }
-    });
 
-
-
-    $(document).on('change', '#province', function(){
-     var province = $(this).val();
-     if(province != '')
-     {
-      load_json_data_city('city', province);
-     }
-     else
-     {
-        $('#province').html('<option value="">Select state</option>');
-        $('#city').html('<option value="">Select city</option>');
-        $('#barangay').html('<option value="">Select house</option>');
-     }
-    });
-
-     $(document).on('change', '#city', function(){
-     var city = $(this).val();
-     if(province != '')
-     {
-      load_json_data_barangay('barangay', city);
-     }
-     else
-     {
-        $('#province').html('<option value="">Select state</option>');
-        $('#city').html('<option value="">Select city</option>');
-        $('#barangay').html('<option value="">Select house</option>');
-     }
-    });
     
   
     });
